@@ -2,44 +2,41 @@ package com.mongodb.tasktracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import com.mongodb.tasktracker.databinding.ActivityHomeBinding
+import io.realm.Realm
 import com.mongodb.tasktracker.model.User
-
+import io.realm.*
+import io.realm.kotlin.where
+import io.realm.mongodb.sync.SyncConfiguration
+import org.bson.types.ObjectId
 class HomeActivity : AppCompatActivity() {
-
-    lateinit var binding: ActivityHomeBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        replaceFragment(InterfaceFragment())
+        setContentView(R.layout.activity_home)
 
-        binding.bottomNavigationView.setOnItemSelectedListener {
+        // Khởi tạo Realm
+        val realm = Realm.getDefaultInstance()
 
-            when(it.itemId){
+        // Truy vấn dữ liệu từ bảng User
+        val user = realm.where(User::class.java).findFirst()
 
-                R.id.userInterface -> replaceFragment(InterfaceFragment())
-                R.id.user -> replaceFragment(InforFragment())
-                R.id.gear -> replaceFragment(GearFragment())
-                R.id.shop ->replaceFragment(ShopFragment())
+        // Kiểm tra xem có dữ liệu không
+        if (user != null) {
+            // In ra thông tin người dùng
+            println("Username: ${user.username}")
+            println("Password: ${user.password}")
+            println("Role: ${user.role}")
 
-                else -> {
-
-                }
+            // Kiểm tra và in ra thông tin chi tiết nếu có
+            val details = user.details
+            if (details != null) {
+                println("Name: ${details.name}")
+                println("Email: ${details.email}")
             }
-            true
+        } else {
+            println("Không tìm thấy người dùng!")
         }
 
-    }
-
-    private fun replaceFragment(fragment : Fragment){
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout,fragment)
-        fragmentTransaction.commit()
-
-
+        // Đóng Realm khi không cần thiết nữa
+        realm.close()
     }
 }
