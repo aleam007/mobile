@@ -177,12 +177,6 @@
         app:layout_constraintTop_toBottomOf="@id/passwordTextInputLayout"
         android:layout_marginTop="70dp" />
 
-    <Button
-        android:id="@+id/homebtt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintStart_toEndOf="@+id/button_login"
-        app:layout_constraintTop_toBottomOf="@+id/forgotPasswordTextView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
